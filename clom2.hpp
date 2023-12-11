@@ -34,7 +34,22 @@
 
 #define CLOM2_SET_ARGS(c, v) clom2::args.reserve(c); for (int i = 0; i < c; ++i) clom2::args.emplace_back(v[i]);
 
-#define CLOM2_GENERAL_SETTING(name, T, value, hint, converter) T name = converter(clom2::find_setting_value(#name, #value)); std::string name##_hint = #hint;
+#define CLOM2_CHECK_FOR_HELP_BEGIN(flag) \
+clom2::help_flag = #flag; \
+clom2::check_for_help = clom2::find_flag_value(#flag); \
+if (clom2::check_for_help) \
+    std::cout << "Available options:\noption-name (option-type) ['default-value']: description\n\n";
+
+#define CLOM2_CHECK_FOR_HELP_END() \
+if (clom2::check_for_help) { \
+    std::cout << clom2::help_flag << " (flag): Display this help and exit" << '\n'; \
+    exit(0); \
+} \
+clom2::check_for_help = false;
+
+#define CLOM2_GENERAL_SETTING(name, T, value, hint, converter) \
+T name = converter(clom2::find_setting_value(#name, #value)); \
+std::string name##_hint = clom2::process_hint(#hint, #name" ("#T") ['"#value"']: "#hint);
 
 #define CLOM2_SETTING_STRING(name, value, hint) CLOM2_GENERAL_SETTING(name, std::string, value, hint, std::string)
 #define CLOM2_SETTING_STRING_VEC(name, value, hint) CLOM2_GENERAL_SETTING(name, std::vector<std::string>, value, hint, clom2::str_to_str_vec)
@@ -45,10 +60,14 @@
 #define CLOM2_SETTING_DOUBLE(name, value, hint) CLOM2_GENERAL_SETTING(name, double, value, hint, clom2::str_to_double)
 #define CLOM2_SETTING_DOUBLE_VEC(name, value, hint) CLOM2_GENERAL_SETTING(name, std::vector<double>, value, hint, clom2::str_to_double_vec)
 
-#define CLOM2_FLAG(name, hint) bool name = clom2::find_flag_value(#name); std::string name##_hint = #hint;
+#define CLOM2_FLAG(name, hint) \
+bool name = clom2::find_flag_value(#name); \
+std::string name##_hint = clom2::process_hint(#hint, #name" (flag): "#hint);
 
 namespace clom2 {
     std::vector<std::string> args;
+    bool check_for_help = false;
+    std::string help_flag;
 
     std::string find_setting_value(std::string name, std::string default_value) {
         auto i = std::find(args.begin(), args.end(), name);
@@ -70,6 +89,11 @@ namespace clom2 {
 
         if (args.end() == i) return false;
         else return true;
+    }
+
+    std::string process_hint(std::string hint, std::string message) {
+        if (check_for_help) std::cout << message << '\n';
+        return hint;
     }
 
     // Converter Functions

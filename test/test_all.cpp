@@ -21,6 +21,8 @@ void print_vec(std::vector<T> vec) {
 int main(int argc, char const *argv[]) {
     CLOM2_SET_ARGS(argc, argv);
 
+    CLOM2_CHECK_FOR_HELP_BEGIN(help);
+
     CLOM2_SETTING_STRING(word, hello, a greeting);
     CLOM2_SETTING_STRING_VEC(words, hello hallo hola hej, a list of greetings in different languages);
     CLOM2_SETTING_INT(number, 3, an integer);
@@ -34,6 +36,8 @@ int main(int argc, char const *argv[]) {
     CLOM2_GENERAL_SETTING(letter, char, A, any letter or other character, str_to_char);
 
     CLOM2_FLAG(banner, whether the national flag of C++ exists);
+
+    CLOM2_CHECK_FOR_HELP_END();
 
     std::cout << "word: " << word_hint << ": "; std::cout << word << '\n';
     std::cout << "words: " << words_hint << ": "; print_vec(words); std::cout << '\n';

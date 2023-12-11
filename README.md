@@ -7,19 +7,21 @@ A single-header Command Line Option Manager library for C++ using macros. For an
 - Parse the values given in the command line to various types and detect the presence of flags
 - Declare a variable and initialize it with the value assigned to it in the command line at the same time using a single macro
 - Store lists of parameters in an `std::vector` of the corresponding type
+- Generate a help message listing the options' names, types, default values and descriptions
 
 ## Demo
 This is an example for how you could use this library.
 
 ``` C++
-#include "clom2.hpp"
+#include "../clom2.hpp"
 #include <iostream>
 
 struct Settings {
     /* Parse and store the option values in variables */
     CLOM2_SETTING_STRING(name, Mr X, The name of our subject);
     CLOM2_SETTING_FLOAT(height, 6.0f, The height of our subject in feet);
-    CLOM2_SETTING_STRING_VEC(favorite_fruits, apple banana cherry, The fruits our subject prefers to consume);
+    CLOM2_SETTING_STRING_VEC(favorite_fruits, apple banana cherry,
+                             The fruits our subject prefers to consume);
     CLOM2_FLAG(is_smart, Specify whether our subject is smart);
 };
 
@@ -27,9 +29,13 @@ int main(int argc, char const *argv[]) {
     /* Pass the command line arguments to CLOM2 */
     CLOM2_SET_ARGS(argc, argv);
 
+    /* Create the setting wrapper object and check if the user requested
+     * a help message */
+    CLOM2_CHECK_FOR_HELP_BEGIN(help);
     Settings S;
+    CLOM2_CHECK_FOR_HELP_END();
 
-    /* Access the options as member variables of Settings */
+    /* Access the options as member variables of the settings object */
     std::cout << S.name << " is " << S.height << " foot tall ";
     std::cout << "and is " << (S.is_smart ? "smart." : "not smart.") << '\n';
     std::cout << "Their favorite fruits are:" << '\n';
@@ -53,6 +59,17 @@ Mark is 5.2 foot tall and is smart.
 Their favorite fruits are:
 - mango
 - orange
+```
+```
+$ my-app help
+Available options:
+option-name (option-type) ['default-value']: description
+
+name (std::string) ['Mr X']: The name of our subject
+height (float) ['6.0f']: The height of our subject in feet
+favorite_fruits (std::vector<std::string>) ['apple banana cherry']: The fruits our subject prefers to consume
+is_smart (flag): Specify whether our subject is smart
+help (flag): Display this help and exit
 ```
 
 ## Macros
@@ -88,3 +105,10 @@ Declare a variable of the type `type` and use the `converter` function (which mu
 CLOM2_FLAG(name, hint);
 ```
 Similar to `CLOM2_SETTING_<TYPE>` with the difference that a flag always has the type `bool`. If its name is listed in the command line parameters, it is initialized with `true`, otherwise with `false`.
+
+###### Help Message
+```C++
+CLOM2_CHECK_FOR_HELP_BEGIN(help_flag);
+CLOM2_CHECK_FOR_HELP_END();
+```
+Optionally place all settings and flags between `BEGIN` and `END` to generate a help message if the user requests one. If the flag `help_flag` is found in the command line, the help message is printed and the process exits.
