@@ -30,15 +30,20 @@
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
+#include <sstream>
 
 #define CLOM2_SET_ARGS(c, v) clom2::args.reserve(c); for (int i = 0; i < c; ++i) clom2::args.emplace_back(v[i]);
 
 #define CLOM2_GENERAL_SETTING(name, T, value, hint, converter) T name = converter(clom2::find_setting_value(#name, #value)); std::string name##_hint = #hint;
 
 #define CLOM2_SETTING_STRING(name, value, hint) CLOM2_GENERAL_SETTING(name, std::string, value, hint, std::string)
+#define CLOM2_SETTING_STRING_VEC(name, value, hint) CLOM2_GENERAL_SETTING(name, std::vector<std::string>, value, hint, clom2::str_to_str_vec)
 #define CLOM2_SETTING_INT(name, value, hint) CLOM2_GENERAL_SETTING(name, int, value, hint, clom2::str_to_int)
+#define CLOM2_SETTING_INT_VEC(name, value, hint) CLOM2_GENERAL_SETTING(name, std::vector<int>, value, hint, clom2::str_to_int_vec)
 #define CLOM2_SETTING_FLOAT(name, value, hint) CLOM2_GENERAL_SETTING(name, float, value, hint, clom2::str_to_float)
+#define CLOM2_SETTING_FLOAT_VEC(name, value, hint) CLOM2_GENERAL_SETTING(name, std::vector<float>, value, hint, clom2::str_to_float_vec)
 #define CLOM2_SETTING_DOUBLE(name, value, hint) CLOM2_GENERAL_SETTING(name, double, value, hint, clom2::str_to_double)
+#define CLOM2_SETTING_DOUBLE_VEC(name, value, hint) CLOM2_GENERAL_SETTING(name, std::vector<double>, value, hint, clom2::str_to_double_vec)
 
 #define CLOM2_FLAG(name, hint) bool name = clom2::find_flag_value(#name); std::string name##_hint = #hint;
 
@@ -67,6 +72,18 @@ namespace clom2 {
         else return true;
     }
 
+    // Converter Functions
+
+    std::vector<std::string> str_to_str_vec(std::string str) {
+        std::string tmp;
+        std::stringstream ss {str};
+        std::vector<std::string> vec;
+
+        while(getline(ss, tmp, ' ')) vec.push_back(tmp);
+
+        return vec;
+    }
+
     int str_to_int(std::string str) {
         int v;
         try {
@@ -76,6 +93,15 @@ namespace clom2 {
             exit(-1);
         }
         return v;
+    }
+
+    std::vector<int> str_to_int_vec(std::string str) {
+        std::vector<int> vec;
+        std::vector<std::string> str_vec = str_to_str_vec(str);
+
+        for (auto s : str_vec) vec.push_back(str_to_int(s));
+
+        return vec;
     }
 
     float str_to_float(std::string str) {
@@ -89,6 +115,15 @@ namespace clom2 {
         return v;
     }
 
+    std::vector<float> str_to_float_vec(std::string str) {
+        std::vector<float> vec;
+        std::vector<std::string> str_vec = str_to_str_vec(str);
+
+        for (auto s : str_vec) vec.push_back(str_to_float(s));
+
+        return vec;
+    }
+
     double str_to_double(std::string str) {
         double v;
         try {
@@ -99,6 +134,16 @@ namespace clom2 {
         }
         return v;
     }
+
+    std::vector<double> str_to_double_vec(std::string str) {
+        std::vector<double> vec;
+        std::vector<std::string> str_vec = str_to_str_vec(str);
+
+        for (auto s : str_vec) vec.push_back(str_to_double(s));
+
+        return vec;
+    }
+
 } /* end of namespace clom2 */
 
 #endif /* end of include guard: CLOM2_H */

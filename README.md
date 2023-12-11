@@ -55,15 +55,20 @@ Pass the argument list to clom2 and store it internally. Must happen before pars
 ###### Settings
 ``` C++
 CLOM2_SETTING_STRING(name, default_value, hint);
+CLOM2_SETTING_STRING_VEC(name, default_value, hint);
 CLOM2_SETTING_INT(name, default_value, hint);
+CLOM2_SETTING_INT_VEC(name, default_value, hint);
 CLOM2_SETTING_FLOAT(name, default_value, hint);
+CLOM2_SETTING_FLOAT_VEC(name, default_value, hint);
 CLOM2_SETTING_DOUBLE(name, default_value, hint);
+CLOM2_SETTING_DOUBLE_VEC(name, default_value, hint);
 ```
-Declare a variable named `name` of the corresponding type and initialize it with the command line parameter if specified, otherwise with `default_value`. Also declare and initialize an `std::string` named `name_hint` (where `name` is replaced with the setting name) with `hint`.
+Declare a variable named `name` of the corresponding type and initialize it with the command line parameter if specified, otherwise with `default_value`. Also declare and initialize an `std::string` named `name_hint` (where `name` is replaced with the setting name) with `hint`.  
+The `VEC` variants create an `std::vector` of the corresponding type so that each element in the vector is one word (delimited by spaces) of the given input (in the command line, the list of elements needs to be enclosed in quotation marks, i.e " " or ' ', or each element except the last one has to be followed by a backslash \\ ).
 ``` C++
 CLOM2_GENERAL_SETTING(name, type, default_value, hint, converter);
 ```
-Declare a variable of the type `type` and use the `converter` function (which must return `type` and take an `std::string` as parameter) to parse a string to the right type.
+Declare a variable of the type `type` and use the `converter` function (which must return `type` and take an `std::string` as parameter) to parse a string to the right type. See the example in [test/test_all.cpp](test/test_all.cpp).
 
 ###### Flags
 ``` C++
