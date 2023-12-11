@@ -1,6 +1,6 @@
 # CLOM2
 
-A single-header Command Line Option Manager library for C++ using macros. For a run-time alternative see [CLOM](https://github.com/Icemonster0/CLOM).
+A single-header Command Line Option Manager library for C++ using macros. For an unnecessarily overcomplicated alternative see [CLOM](https://github.com/Icemonster0/CLOM).
 
 ---
 
