@@ -3,9 +3,12 @@
  * In this case, we can set the name, height and smartness
  * of our subject using command line options.
  * Example:
- * $ MyApp name Mark height 5.2 is_smart
+ * $ MyApp name Mark height 5.2 is_smart favorite_fruits 'mango orange'
  * Result:
  * Mark is 5.2 foot tall and is smart.
+ * Their favorite fruits are:
+ * - mango
+ * - orange
 */
 
 #include "../clom2.hpp"
