@@ -66,6 +66,23 @@ bool var_name = clom2::find_flag_value(#prim_name, #alt_name); \
 std::string var_name##_hint = clom2::process_hint(#hint, #prim_name", "#alt_name" (flag): "#hint);
 
 namespace clom2 {
+    extern std::vector<std::string> args;
+    extern bool check_for_help;
+    extern std::string help_flag, alt_help_flag;
+
+    std::string find_setting_value(std::string prim_name, std::string alt_name, std::string default_value);
+    bool find_flag_value(std::string prim_name, std::string alt_name);
+    std::string process_hint(std::string hint, std::string message);
+    std::vector<std::string> str_to_str_vec(std::string str);
+    int str_to_int(std::string str);
+    std::vector<int> str_to_int_vec(std::string str);
+    float str_to_float(std::string str);
+    std::vector<float> str_to_float_vec(std::string str);
+    double str_to_double(std::string str);
+    std::vector<double> str_to_double_vec(std::string str);
+
+#ifdef CLOM2_IMPLEMENTATION
+
     std::vector<std::string> args;
     bool check_for_help = false;
     std::string help_flag, alt_help_flag;
@@ -177,6 +194,8 @@ namespace clom2 {
 
         return vec;
     }
+
+#endif /* CLOM2_IMPLEMENTATION */
 
 } /* end of namespace clom2 */
 

@@ -11,9 +11,17 @@ A single-header Command Line Option Manager library for C++ using macros. For an
 
 ## Demo
 This is an example for how you could use this library.
-
+Note that `CLOM2_IMPLEMENTATION` must be defined in **exactly one** source file, so I recommend adding a .cpp/.cc file (eg. `clom2.cpp`) with the following contents:
 ``` C++
-#include "../clom2.hpp"
+#define CLOM2_IMPLEMENTATION
+#include "clom2.hpp"
+```
+
+For simplicity, this demo assumes that the entire program is written in a single source file:
+``` C++
+#define CLOM2_IMPLEMENTATION
+#include "clom2.hpp"
+
 #include <iostream>
 
 struct Settings {

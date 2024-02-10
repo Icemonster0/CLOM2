@@ -11,6 +11,7 @@
  * - orange
 */
 
+#define CLOM2_IMPLEMENTATION
 #include "../clom2.hpp"
 #include <iostream>
 
